@@ -32,10 +32,6 @@ commands:
       - run:
           name: Deploy
           command: |
-            if [[ "${CI_PULL_REQUEST}" != "" ]]; then
-              echo "Skipping deployment for PR"
-              circleci step halt
-            else
                cd <<parameters.project>>
 
                # Rather than triggering off tag pushes, we inspect for whether HEAD of release branches are tagged
