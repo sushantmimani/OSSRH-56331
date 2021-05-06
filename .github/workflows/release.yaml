@@ -58,6 +58,10 @@ jobs:
       - name: Publish C# HelloWorld
         run: |
           cd csharp/HelloWorld
+          apt-get update
+          apt-get install -y libxml2-utils
+          dotnet tool install -g trx2junit
+          dotnet tool install -g dotnet-setversion
           BASE_VERSION=$(xmllint --xpath "//Project/PropertyGroup/Version/text()" Directory.Build.props)
           VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
           if [[ "${VERSION_SUFFIX}" != "alpha" ]]; then
