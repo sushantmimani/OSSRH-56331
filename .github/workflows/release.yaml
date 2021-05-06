@@ -32,11 +32,13 @@ jobs:
       - name: Publish package
         run: |
           cd java/HelloWorld
-          printenv
           BASE_VERSION=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version)
           VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
+          ARTIFACT_NAME=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.artifactId)
+          TAG=`echo java/${ARTIFACT_NAME}/v${BASE_VERSION}`
           if [[ "${CIRCLE_BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
             mvn -DskipTests deploy -Prelease
+            git tag -f ${TAG} ${GITHUB_SHA}
           fi
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
