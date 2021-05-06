@@ -191,7 +191,7 @@ jobs:
           key: go-mod-v4-{{ .Branch }}-{{ .BuildNum }}
       - deploy-project:
           project: go/HelloWorld
-          version: cat .version
+          version: cat .versionfile
   go-second-hello-world:
     docker:
       - image: circleci/golang
@@ -215,4 +215,4 @@ jobs:
           key: go-mod-v4-{{ .Branch }}-{{ .BuildNum }}
       - deploy-project:
           project: go/SecondHelloWorld
-          version: cat .version
+          version: cat .versionfile

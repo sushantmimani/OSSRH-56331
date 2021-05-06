@@ -30,32 +30,32 @@ jobs:
         uses: actions/setup-go@37335c7bb261b353407cff977110895fa0b4f7d8
         with:
           go-version: '1.15'
-#      - name: Publish Java HelloWorld
-#        run: |
-#          cd java/HelloWorld
-#          BASE_VERSION=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version)
-#          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
-#          if [[ "${VERSION_SUFFIX}" != "alpha" ]]; then
-#            ./scripts/release_prod.sh
-#          fi
-#        env:
-#          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-#          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
-#          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      - name: Publish Java SecondHelloWorld
-#        run: |
-#          cd java/SecondHelloWorld
-#          BASE_VERSION=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version)
-#          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
-#          if [[ "${VERSION_SUFFIX}" != "alpha" ]]; then
-#            ./scripts/release_prod.sh
-#          fi
-#        env:
-#          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-#          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
-#          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish Java HelloWorld
+        run: |
+          cd java/HelloWorld
+          BASE_VERSION=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version)
+          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
+          if [[ "${VERSION_SUFFIX}" != "alpha" ]]; then
+            ./scripts/release_prod.sh
+          fi
+        env:
+          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish Java SecondHelloWorld
+        run: |
+          cd java/SecondHelloWorld
+          BASE_VERSION=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version)
+          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
+          if [[ "${VERSION_SUFFIX}" != "alpha" ]]; then
+            ./scripts/release_prod.sh
+          fi
+        env:
+          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish C# HelloWorld
         run: |
           cd csharp/HelloWorld
@@ -83,5 +83,25 @@ jobs:
         env:
           NUGET_KEY: ${{ secrets.NUGET_KEY }}
           NUGET_SOURCE: ${{ secrets.NUGET_SOURCE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish Go HelloWorld
+        run: |
+          cd go/HelloWorld
+          BASE_VERSION=$(cat .versionfile)
+          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
+          if [[ "${VERSION_SUFFIX}" != "alpha" ]]; then
+            ./scripts/release_prod.sh
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish C# SecondHelloWorld
+        run: |
+          cd go/SecondHelloWorld
+          BASE_VERSION=$(cat .versionfile)
+          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
+          if [[ "${VERSION_SUFFIX}" != "alpha" ]]; then
+            ./scripts/release_prod.sh
+          fi
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
