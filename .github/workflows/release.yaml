@@ -9,7 +9,8 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
       - name: Set up Maven Central Repository
         uses: actions/setup-java@v2
         with:
@@ -23,8 +24,12 @@ jobs:
       - name: Publish package
         run: |
           cd ${{ github.event.inputs.path }}
-          pwd
-          mvn -DskipTests deploy -Prelease
+          BASE_VERSION=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version)
+          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
+          if [[ "${CIRCLE_BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
+            mvn -DskipTests deploy -Prelease
+            echo "::set-env name=TAG::${{ github.event.inputs.path }}/v${BASE_VERSION}"
+          fi
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
