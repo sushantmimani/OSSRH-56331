@@ -35,7 +35,9 @@ jobs:
           BASE_VERSION=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version)
           VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
           if [[ "${VERSION_SUFFIX}" != "alpha" ]]; then
-            ./scripts/release_prod.sh
+                mvn -DskipTests deploy -Prelease
+                git tag -f ${TAG} ${GITHUB_SHA}
+                git push origin --tags
           fi
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
@@ -66,6 +68,7 @@ jobs:
         env:
           NUGET_KEY: ${{ secrets.NUGET_KEY }}
           NUGET_SOURCE: ${{ secrets.NUGET_SOURCE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish C# SecondHelloWorld
         run: |
           cd csharp/SecondHelloWorld
@@ -77,3 +80,5 @@ jobs:
         env:
           NUGET_KEY: ${{ secrets.NUGET_KEY }}
           NUGET_SOURCE: ${{ secrets.NUGET_SOURCE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
