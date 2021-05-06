@@ -7,6 +7,7 @@ TAG=`echo java/${ARTIFACT_NAME}/v${BASE_VERSION}`
 
 RESULT=$(git tag -l ${TAG})
 if [[ "$RESULT" != ${TAG} ]]; then
+
     echo ${PRIVATE_GPG_KEY} | base64 --decode | gpg --batch --no-tty --import --yes
     echo "Release prod artifact"
     mvn -DskipTests -s ../../.circleci/settings.xml deploy -Prelease

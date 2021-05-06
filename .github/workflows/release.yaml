@@ -42,11 +42,7 @@ jobs:
           echo {ARTIFACT_NAME}
           echo ${TAG}
           echo ${BRANCH}
-          if [[ "${BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
-            mvn -DskipTests deploy -Prelease
-            git tag -f ${TAG} ${GITHUB_SHA}
-            git push origin --tags
-          fi
+
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
