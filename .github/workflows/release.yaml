@@ -21,16 +21,27 @@ jobs:
           server-password: MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }} # Value of the GPG private key to import
           gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
+      - name: Set up C#
+        uses: actions/setup-dotnet@51f68377c181a79065c61bd492bd49be4575c439
+        with:
+          dotnet-version: '3.1.x'
+      - name: Set up Go 1.15
+        uses: actions/setup-go@37335c7bb261b353407cff977110895fa0b4f7d8
+        with:
+          go-version: '1.15'
       - name: Publish package
         run: |
-          cd ${{ github.event.inputs.path }}
+          cd java/HelloWorld
+          printenv
           BASE_VERSION=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version)
           VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
           if [[ "${CIRCLE_BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
             mvn -DskipTests deploy -Prelease
-            echo "::set-env name=TAG::${{ github.event.inputs.path }}/v${BASE_VERSION}"
+#            echo "::set-env name=TAG::${{ github.event.inputs.path }}/v${BASE_VERSION}"
+#            git tag -f ${TAG} ${CIRCLE_SHA1}
           fi
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
