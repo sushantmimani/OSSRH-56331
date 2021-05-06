@@ -37,8 +37,6 @@ jobs:
           VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
           if [[ "${CIRCLE_BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
             mvn -DskipTests deploy -Prelease
-#            echo "::set-env name=TAG::${{ github.event.inputs.path }}/v${BASE_VERSION}"
-#            git tag -f ${TAG} ${CIRCLE_SHA1}
           fi
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
