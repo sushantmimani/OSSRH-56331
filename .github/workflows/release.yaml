@@ -1,10 +1,10 @@
 name: Publish package to the Maven Central Repository
 on:
-  workflow_dispatch:
-    inputs:
-      path:
-        description: 'Release selected artifact'
-        required: true
+  push:
+    # Sequence of patterns matched against refs/heads
+    branches:
+      # Push events to branches matching refs/heads/releases/10
+      - 'release-**'
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -36,7 +36,7 @@ jobs:
           VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
           ARTIFACT_NAME=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.artifactId)
           TAG=`echo java/${ARTIFACT_NAME}/v${BASE_VERSION}`
-          if [[ "${CIRCLE_BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
+          if [[ "${GITHUB_REF##*/}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
             mvn -DskipTests deploy -Prelease
             git tag -f ${TAG} ${GITHUB_SHA}
             git push origin --tags
