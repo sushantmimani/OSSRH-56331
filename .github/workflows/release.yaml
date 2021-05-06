@@ -58,8 +58,8 @@ jobs:
       - name: Publish C# HelloWorld
         run: |
           cd csharp/HelloWorld
-          apt-get update
-          apt-get install -y libxml2-utils
+          sudo apt-get update -y
+          sudo apt-get install -y libxml2-utils
           dotnet tool install -g trx2junit
           dotnet tool install -g dotnet-setversion
           BASE_VERSION=$(xmllint --xpath "//Project/PropertyGroup/Version/text()" Directory.Build.props)
