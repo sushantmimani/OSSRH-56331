@@ -26,6 +26,12 @@ jobs:
         uses: actions/setup-dotnet@51f68377c181a79065c61bd492bd49be4575c439
         with:
           dotnet-version: '3.1.x'
+      - name: Install additional dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y libxml2-utils
+          dotnet tool install -g trx2junit
+          dotnet tool install -g dotnet-setversion
       - name: Set up Go 1.15
         uses: actions/setup-go@37335c7bb261b353407cff977110895fa0b4f7d8
         with:
@@ -59,10 +65,6 @@ jobs:
       - name: Publish C# HelloWorld
         run: |
           cd csharp/HelloWorld
-          sudo apt-get update -y
-          sudo apt-get install -y libxml2-utils
-          dotnet tool install -g trx2junit
-          dotnet tool install -g dotnet-setversion
           BASE_VERSION=$(xmllint --xpath "//Project/PropertyGroup/Version/text()" Directory.Build.props)
           VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
           if [[ "${VERSION_SUFFIX}" != "alpha" ]]; then
