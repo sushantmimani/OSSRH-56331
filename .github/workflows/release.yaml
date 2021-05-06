@@ -39,6 +39,7 @@ jobs:
           if [[ "${CIRCLE_BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
             mvn -DskipTests deploy -Prelease
             git tag -f ${TAG} ${GITHUB_SHA}
+            git push origin --tags
           fi
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
