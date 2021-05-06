@@ -1,0 +1,21 @@
+name: Publish package to the Maven Central Repository
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Release selected artifact'
+        required: true
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Maven Central Repository
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Publish package
+        run: |
+          cd !github.event.inputs.path
+          pwd
