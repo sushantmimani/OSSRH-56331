@@ -4,7 +4,6 @@ set -e
 BASE_VERSION=$(xmllint --xpath "//Project/PropertyGroup/Version/text()" Directory.Build.props)
 ARTIFACT_NAME=$(xmllint --xpath "//Project/PropertyGroup/Title/text()" SecondHelloWorld.csproj)
 TAG=`echo csharp/${ARTIFACT_NAME}/v${BASE_VERSION}`
-git fetch --tags
 RESULT=$(git tag -l ${TAG})
 if [[ "$RESULT" != ${TAG} ]]; then
     dotnet pack -c Release
