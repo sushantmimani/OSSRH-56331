@@ -17,5 +17,5 @@ jobs:
           distribution: 'adopt'
       - name: Publish package
         run: |
-          cd !github.event.inputs.path
+          cd ${{ github.event.inputs.path }}
           pwd
