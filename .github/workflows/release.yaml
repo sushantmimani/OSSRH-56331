@@ -2,7 +2,7 @@ name: Publish package to the Maven Central Repository
 on:
   workflow_dispatch:
     inputs:
-      target:
+      path:
         description: 'Release selected artifact'
         required: true
 jobs:
