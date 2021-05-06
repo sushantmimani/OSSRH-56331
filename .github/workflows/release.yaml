@@ -29,21 +29,51 @@ jobs:
         uses: actions/setup-go@37335c7bb261b353407cff977110895fa0b4f7d8
         with:
           go-version: '1.15'
-      - name: Publish package
+      - name: Publish HelloWorld
         run: |
           cd java/HelloWorld
           BASE_VERSION=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version)
           VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
-          ARTIFACT_NAME=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.artifactId)
-          TAG=`echo java/${ARTIFACT_NAME}/v${BASE_VERSION}`
-          BRANCH=`echo ${GITHUB_REF##*/}`
-          if [[ "${BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
-            mvn -DskipTests deploy -Prelease
-            git tag -f ${TAG} ${GITHUB_SHA}
-            git push origin --tags
+          if [[ "${VERSION_SUFFIX}" != "alpha" ]]; then
+            ./scripts/release_prod.sh
           fi
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish SecondHelloWorld
+        run: |
+          cd java/SecondHelloWorld
+          BASE_VERSION=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version)
+          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
+          if [[ "${VERSION_SUFFIX}" != "alpha" ]]; then
+            ./scripts/release_prod.sh
+          fi
+        env:
+          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish C# HelloWorld
+        run: |
+          cd csharp/HelloWorld
+          BASE_VERSION=$(xmllint --xpath "//Project/PropertyGroup/Version/text()" Directory.Build.props)
+          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
+          if [[ "${VERSION_SUFFIX}" != "alpha" ]]; then
+            ./scripts/release_prod.sh
+          fi
+        env:
+          NUGET_KEY: ${{ secrets.NUGET_KEY }}
+          NUGET_SOURCE: ${{ secrets.NUGET_SOURCE }}
+      - name: Publish C# SecondHelloWorld
+        run: |
+          cd csharp/SecondHelloWorld
+          BASE_VERSION=$(xmllint --xpath "//Project/PropertyGroup/Version/text()" Directory.Build.props)
+          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
+          if [[ "${VERSION_SUFFIX}" != "alpha" ]]; then
+            ./scripts/release_prod.sh
+          fi
+        env:
+          NUGET_KEY: ${{ secrets.NUGET_KEY }}
+          NUGET_SOURCE: ${{ secrets.NUGET_SOURCE }}

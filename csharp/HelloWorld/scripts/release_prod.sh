@@ -12,8 +12,8 @@ if [[ "$RESULT" != ${TAG} ]]; then
     find . -name *${BASE_VERSION}.nupkg  | xargs -L1 -I '{}' dotnet nuget push {} -k ${NUGET_KEY} -s ${NUGET_SOURCE}
 
     # Create tag
-    git tag -f ${TAG} ${CIRCLE_SHA1}
-    ssh-agent sh -c 'ssh-add ~/.ssh/id_rsa_git; git push origin --tags'
+    git tag -f ${TAG} ${GITHUB_SHA}
+    git push origin --tags
 else
     echo "Version is already deployed and tagged"
 fi
