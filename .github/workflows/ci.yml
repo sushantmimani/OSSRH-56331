@@ -71,6 +71,17 @@ jobs:
           cd csharp/HelloWorld
           ./scripts/clean.sh
           ./scripts/build.sh
+      - name: Upload artifact
+        run: |
+          pwd
+          ls
+          ls ./bin/Release/
+          find . -name '*.dll'
+
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: csharp helloworld
+#          path: ~/ ~/.nuget/packages/
 
   csharp-second-hello-world:
     name: C# Second Hello World
