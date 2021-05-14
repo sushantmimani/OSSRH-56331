@@ -71,6 +71,11 @@ jobs:
           cd csharp/HelloWorld
           ./scripts/clean.sh
           ./scripts/build.sh
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: csharp helloworld
+          path: /__w/test-deploy/test-deploy/csharp/HelloWorld/bin/Release/netcoreapp2.1/HelloWorld.dll
 
   csharp-second-hello-world:
     name: C# Second Hello World
