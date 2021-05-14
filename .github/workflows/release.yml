@@ -59,7 +59,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: csharp helloworld
-          path: ${GITHUB_WORKSPACE}/csharp/helloworld/bin/Release
+          path: ${GITHUB_WORKSPACE}/csharp/HelloWorld/bin/Release
       - name: Publish C# HelloWorld
         run: |
           cd csharp/HelloWorld
