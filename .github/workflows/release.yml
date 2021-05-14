@@ -55,6 +55,11 @@ jobs:
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: csharp helloworld
+          path: ${GITHUB_WORKSPACE}/csharp/helloworld/bin/Release
       - name: Publish C# HelloWorld
         run: |
           cd csharp/HelloWorld

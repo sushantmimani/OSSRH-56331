@@ -72,14 +72,10 @@ jobs:
           ./scripts/clean.sh
           ./scripts/build.sh
       - name: Upload artifact
-        run: |
-          printenv
-          pwd
-
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: csharp helloworld
-#          path: ~/ ~/.nuget/packages/
+        uses: actions/upload-artifact@v2
+        with:
+          name: csharp helloworld
+          path: ${GITHUB_WORKSPACE}/csharp/helloworld/bin/Release
 
   csharp-second-hello-world:
     name: C# Second Hello World
