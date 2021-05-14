@@ -73,7 +73,7 @@ jobs:
           ./scripts/build.sh
       - name: Upload artifact
         run: |
-          pwd
+          cd csharp/HelloWorld
           ls
           ls ./bin/Release/
           find . -name '*.dll'
