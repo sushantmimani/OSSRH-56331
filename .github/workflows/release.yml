@@ -59,7 +59,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: csharp helloworld
-          path: ${GITHUB_WORKSPACE}/csharp/HelloWorld/bin/Release
+          path: /__w/test-deploy/test-deploy/csharp/HelloWorld/bin/Release/netcoreapp2.1/HelloWorld.dll
       - name: Publish C# HelloWorld
         run: |
           cd csharp/HelloWorld
