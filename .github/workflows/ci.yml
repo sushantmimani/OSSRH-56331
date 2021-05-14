@@ -71,15 +71,10 @@ jobs:
           cd csharp/HelloWorld
           ./scripts/clean.sh
           ./scripts/build.sh
-          ls ${GITHUB_WORKSPACE}/csharp/HelloWorld/bin/Release
-      - name: See contents
-        run: |
-          ls ${GITHUB_WORKSPACE}/csharp/HelloWorld/bin/Release
-      - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: csharp helloworld
-          path: ${GITHUB_WORKSPACE}/csharp/HelloWorld/bin/Release
+          path: ${GITHUB_WORKSPACE}/csharp/HelloWorld/bin/Release/**
 
   csharp-second-hello-world:
     name: C# Second Hello World
