@@ -75,7 +75,12 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: csharp helloworld
-          path: ${GITHUB_WORKSPACE}/csharp/HelloWorld/bin/Release/**
+          path: ${GITHUB_WORKSPACE}/csharp/HelloWorld/bin/Release/netcoreapp2.1/*.dll
+      - name: Upload artifact - 1
+        uses: actions/upload-artifact@v2
+        with:
+          name: csharp helloworld
+          path: ${GITHUB_WORKSPACE}/csharp/HelloWorld/bin/Release/**/*.dll
 
   csharp-second-hello-world:
     name: C# Second Hello World
