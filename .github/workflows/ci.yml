@@ -162,7 +162,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: csharp-helloworld
-          path: /__w/test-deploy/test-deploy/csharp/HelloWorld/bin/Release/netcoreapp2.1/HelloWorld.dll
       - name: Publish C# HelloWorld
         run: |
           cd csharp/HelloWorld
@@ -203,7 +202,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: csharp-second-helloworld
-          path: /__w/test-deploy/test-deploy/csharp/HelloWorld/bin/Release/netcoreapp2.1/SecondHelloWorld.dll
+          path: /__w/test-deploy/test-deploy/csharp/SecondHelloWorld/bin/Release/netcoreapp2.1/SecondHelloWorld.dll
 
   release-csharp-second-hello-world:
     name: Release C# HelloWorld
@@ -218,7 +217,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: csharp-second-helloworld
-          path: /__w/test-deploy/test-deploy/csharp/HelloWorld/bin/Release/netcoreapp2.1/SecondHelloWorld.dll
       - name: Publish C# Second HelloWorld
         run: |
           cd csharp/SecondHelloWorld
@@ -253,6 +251,28 @@ jobs:
         run: |
           cd go/HelloWorld
           ./scripts/build.sh
+  release-go-hello-world:
+    name: Release Go Hello World
+    needs: go-hello-world
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
+      - name: Fetch all tags
+        run: git fetch --prune --unshallow --tags
+      - name: Publish Go HelloWorld
+        run: |
+          cd go/HelloWorld
+          BASE_VERSION=$(cat .versionfile)
+          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
+          BRANCH=`echo ${GITHUB_REF#refs/heads/}`
+          if [[ "${BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
+            ./scripts/release_prod.sh
+          else
+            echo "Not a release branch.Skipping"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   go-second-hello-world:
     name: Go Second Hello World
     runs-on: ubuntu-latest
@@ -271,3 +291,26 @@ jobs:
         run: |
           cd go/SecondHelloWorld
           ./scripts/build.sh
+
+  release-go-second-hello-world:
+    name: Release Go Second Hello World
+    needs: go-second-hello-world
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
+      - name: Fetch all tags
+        run: git fetch --prune --unshallow --tags
+      - name: Publish Go SecondHelloWorld
+        run: |
+          cd go/SecondHelloWorld
+          BASE_VERSION=$(cat .versionfile)
+          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
+          BRANCH=`echo ${GITHUB_REF#refs/heads/}`
+          if [[ "${BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
+            ./scripts/release_prod.sh
+          else
+            echo "Not a release branch.Skipping"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
