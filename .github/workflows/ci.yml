@@ -173,7 +173,7 @@ jobs:
           if [[ "${BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
             ./scripts/release_prod.sh
           else
-            echo "Not a release branch.Skipping.
+            echo "Not a release branch.Skipping."
           fi
         env:
           NUGET_KEY: ${{ secrets.NUGET_KEY }}
