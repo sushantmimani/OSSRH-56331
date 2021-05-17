@@ -10,117 +10,117 @@ on:
 
 jobs:
   #### Java
-  java-hello-world:
-    name: Java Hello World
-    runs-on: ubuntu-latest
-    container:
-      image: adoptopenjdk/maven-openjdk11
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
-      - name: Cache Java packages
-        uses: actions/cache@1a9e2138d905efd099035b49d8b7a3888c653ca8
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build
-        run: |
-          cd java/HelloWorld
-          ./scripts/clean.sh
-          ./scripts/build.sh
-
-  release-java-hello-world:
-    name: Release Java Hello World
-    needs: java-hello-world
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
-      - name: Fetch all tags
-        run: git fetch --prune --unshallow --tags
-      - name: Set up Maven Central Repository
-        uses: actions/setup-java@8764a52df183aa0ccea74521dfd9d506ffc7a19a
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-          server-id: ossrh
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_PASSWORD
-          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }} # Value of the GPG private key to import
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
-      - name: Publish Java HelloWorld
-        run: |
-          cd java/HelloWorld
-          BASE_VERSION=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version)
-          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
-          BRANCH=`echo ${GITHUB_REF#refs/heads/}`
-          if [[ "${BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
-            ./scripts/release_prod.sh
-          else
-            echo "Not on a release branch.Skipping"
-          fi
-        env:
-          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  java-second-hello-world:
-    name: Java Second Hello World
-    runs-on: ubuntu-latest
-    container:
-      image: adoptopenjdk/maven-openjdk11
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
-      - name: Cache Java packages
-        uses: actions/cache@1a9e2138d905efd099035b49d8b7a3888c653ca8
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build
-        run: |
-          cd java/SecondHelloWorld
-          ./scripts/clean.sh
-          ./scripts/build.sh
-
-  release-second-java-hello-world:
-    name: Release Java Second Hello World
-    needs: java-second-hello-world
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
-      - name: Fetch all tags
-        run: git fetch --prune --unshallow --tags
-      - name: Set up Maven Central Repository
-        uses: actions/setup-java@8764a52df183aa0ccea74521dfd9d506ffc7a19a
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-          server-id: ossrh
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_PASSWORD
-          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }} # Value of the GPG private key to import
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
-      - name: Publish Java HelloWorld
-        run: |
-          cd java/SecondHelloWorld
-          BASE_VERSION=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version)
-          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
-          BRANCH=`echo ${GITHUB_REF#refs/heads/}`
-          if [[ "${BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
-            ./scripts/release_prod.sh
-          else
-            echo "Not on a release branch.Skipping"
-          fi
-        env:
-          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#  java-hello-world:
+#    name: Java Hello World
+#    runs-on: ubuntu-latest
+#    container:
+#      image: adoptopenjdk/maven-openjdk11
+#    steps:
+#      - name: Checkout the repository
+#        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
+#      - name: Cache Java packages
+#        uses: actions/cache@1a9e2138d905efd099035b49d8b7a3888c653ca8
+#        with:
+#          path: ~/.m2
+#          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+#          restore-keys: ${{ runner.os }}-m2
+#      - name: Build
+#        run: |
+#          cd java/HelloWorld
+#          ./scripts/clean.sh
+#          ./scripts/build.sh
+#
+#  release-java-hello-world:
+#    name: Release Java Hello World
+#    needs: java-hello-world
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
+#      - name: Fetch all tags
+#        run: git fetch --prune --unshallow --tags
+#      - name: Set up Maven Central Repository
+#        uses: actions/setup-java@8764a52df183aa0ccea74521dfd9d506ffc7a19a
+#        with:
+#          java-version: '11'
+#          distribution: 'adopt'
+#          server-id: ossrh
+#          server-username: MAVEN_USERNAME
+#          server-password: MAVEN_PASSWORD
+#          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }} # Value of the GPG private key to import
+#          gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
+#      - name: Publish Java HelloWorld
+#        run: |
+#          cd java/HelloWorld
+#          BASE_VERSION=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version)
+#          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
+#          BRANCH=`echo ${GITHUB_REF#refs/heads/}`
+#          if [[ "${BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
+#            ./scripts/release_prod.sh
+#          else
+#            echo "Not on a release branch.Skipping"
+#          fi
+#        env:
+#          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+#          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+#          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#
+#  java-second-hello-world:
+#    name: Java Second Hello World
+#    runs-on: ubuntu-latest
+#    container:
+#      image: adoptopenjdk/maven-openjdk11
+#    steps:
+#      - name: Checkout the repository
+#        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
+#      - name: Cache Java packages
+#        uses: actions/cache@1a9e2138d905efd099035b49d8b7a3888c653ca8
+#        with:
+#          path: ~/.m2
+#          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+#          restore-keys: ${{ runner.os }}-m2
+#      - name: Build
+#        run: |
+#          cd java/SecondHelloWorld
+#          ./scripts/clean.sh
+#          ./scripts/build.sh
+#
+#  release-second-java-hello-world:
+#    name: Release Java Second Hello World
+#    needs: java-second-hello-world
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
+#      - name: Fetch all tags
+#        run: git fetch --prune --unshallow --tags
+#      - name: Set up Maven Central Repository
+#        uses: actions/setup-java@8764a52df183aa0ccea74521dfd9d506ffc7a19a
+#        with:
+#          java-version: '11'
+#          distribution: 'adopt'
+#          server-id: ossrh
+#          server-username: MAVEN_USERNAME
+#          server-password: MAVEN_PASSWORD
+#          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }} # Value of the GPG private key to import
+#          gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
+#      - name: Publish Java HelloWorld
+#        run: |
+#          cd java/SecondHelloWorld
+#          BASE_VERSION=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version)
+#          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
+#          BRANCH=`echo ${GITHUB_REF#refs/heads/}`
+#          if [[ "${BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
+#            ./scripts/release_prod.sh
+#          else
+#            echo "Not on a release branch.Skipping"
+#          fi
+#        env:
+#          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+#          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+#          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   #### C#
   csharp-hello-world:
@@ -162,10 +162,16 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: csharp-helloworld
+          path: csharp/HelloWorld/bin/Release/netcoreapp2.1/HelloWorld.dll
       - name: Publish C# HelloWorld
         run: |
           sudo apt-get update -y
           sudo apt-get install -y libxml2-utils
+          pwd
+          ls
+          cd ~
+          pwd
+          ls
           cd csharp/HelloWorld
           BASE_VERSION=$(xmllint --xpath "//Project/PropertyGroup/Version/text()" Directory.Build.props)
           VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
@@ -180,141 +186,141 @@ jobs:
           NUGET_SOURCE: ${{ secrets.NUGET_SOURCE }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  csharp-second-hello-world:
-    name: C# Second Hello World
-    runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/dotnet/sdk:3.1
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
-      - name: Cache dotnet packages
-        uses: actions/cache@1a9e2138d905efd099035b49d8b7a3888c653ca8
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget
-      - name: Build
-        run: |
-          cd csharp/SecondHelloWorld
-          ./scripts/clean.sh
-          ./scripts/build.sh
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: csharp-second-helloworld
-          path: /__w/test-deploy/test-deploy/csharp/SecondHelloWorld/bin/Release/netcoreapp2.1/SecondHelloWorld.dll
-
-  release-csharp-second-hello-world:
-    name: Release C# HelloWorld
-    needs: csharp-second-hello-world
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
-      - name: Fetch all tags
-        run: git fetch --prune --unshallow --tags
-      - name: Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: csharp-second-helloworld
-      - name: Publish C# Second HelloWorld
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y libxml2-utils
-          cd csharp/SecondHelloWorld
-          BASE_VERSION=$(xmllint --xpath "//Project/PropertyGroup/Version/text()" Directory.Build.props)
-          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
-          BRANCH=`echo ${GITHUB_REF#refs/heads/}`
-          if [[ "${BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
-            ./scripts/release_prod.sh
-          else
-            echo "Not a release branch.Skipping"
-          fi
-        env:
-          NUGET_KEY: ${{ secrets.NUGET_KEY }}
-          NUGET_SOURCE: ${{ secrets.NUGET_SOURCE }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #### Go
-  go-hello-world:
-    name: Go Hello World
-    runs-on: ubuntu-latest
-    container:
-      image: golang:1.15
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
-      - name: Cache Go packages
-        uses: actions/cache@1a9e2138d905efd099035b49d8b7a3888c653ca8
-        with:
-          path: /go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: ${{ runner.os }}-go-
-      - name: Build
-        run: |
-          cd go/HelloWorld
-          ./scripts/build.sh
-  release-go-hello-world:
-    name: Release Go Hello World
-    needs: go-hello-world
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
-      - name: Fetch all tags
-        run: git fetch --prune --unshallow --tags
-      - name: Publish Go HelloWorld
-        run: |
-          cd go/HelloWorld
-          BASE_VERSION=$(cat .versionfile)
-          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
-          BRANCH=`echo ${GITHUB_REF#refs/heads/}`
-          if [[ "${BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
-            ./scripts/release_prod.sh
-          else
-            echo "Not a release branch.Skipping"
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  go-second-hello-world:
-    name: Go Second Hello World
-    runs-on: ubuntu-latest
-    container:
-      image: golang:1.15
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
-      - name: Cache Go packages
-        uses: actions/cache@1a9e2138d905efd099035b49d8b7a3888c653ca8
-        with:
-          path: /go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: ${{ runner.os }}-go-
-      - name: Build
-        run: |
-          cd go/SecondHelloWorld
-          ./scripts/build.sh
-
-  release-go-second-hello-world:
-    name: Release Go Second Hello World
-    needs: go-second-hello-world
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
-      - name: Fetch all tags
-        run: git fetch --prune --unshallow --tags
-      - name: Publish Go SecondHelloWorld
-        run: |
-          cd go/SecondHelloWorld
-          BASE_VERSION=$(cat .versionfile)
-          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
-          BRANCH=`echo ${GITHUB_REF#refs/heads/}`
-          if [[ "${BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
-            ./scripts/release_prod.sh
-          else
-            echo "Not a release branch.Skipping"
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#  csharp-second-hello-world:
+#    name: C# Second Hello World
+#    runs-on: ubuntu-latest
+#    container:
+#      image: mcr.microsoft.com/dotnet/sdk:3.1
+#    steps:
+#      - name: Checkout the repository
+#        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
+#      - name: Cache dotnet packages
+#        uses: actions/cache@1a9e2138d905efd099035b49d8b7a3888c653ca8
+#        with:
+#          path: ~/.nuget/packages
+#          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+#          restore-keys: |
+#            ${{ runner.os }}-nuget
+#      - name: Build
+#        run: |
+#          cd csharp/SecondHelloWorld
+#          ./scripts/clean.sh
+#          ./scripts/build.sh
+#      - name: Upload artifact
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: csharp-second-helloworld
+#          path: /__w/test-deploy/test-deploy/csharp/SecondHelloWorld/bin/Release/netcoreapp2.1/SecondHelloWorld.dll
+#
+#  release-csharp-second-hello-world:
+#    name: Release C# HelloWorld
+#    needs: csharp-second-hello-world
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
+#      - name: Fetch all tags
+#        run: git fetch --prune --unshallow --tags
+#      - name: Download artifact
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: csharp-second-helloworld
+#      - name: Publish C# Second HelloWorld
+#        run: |
+#          sudo apt-get update -y
+#          sudo apt-get install -y libxml2-utils
+#          cd csharp/SecondHelloWorld
+#          BASE_VERSION=$(xmllint --xpath "//Project/PropertyGroup/Version/text()" Directory.Build.props)
+#          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
+#          BRANCH=`echo ${GITHUB_REF#refs/heads/}`
+#          if [[ "${BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
+#            ./scripts/release_prod.sh
+#          else
+#            echo "Not a release branch.Skipping"
+#          fi
+#        env:
+#          NUGET_KEY: ${{ secrets.NUGET_KEY }}
+#          NUGET_SOURCE: ${{ secrets.NUGET_SOURCE }}
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#  #### Go
+#  go-hello-world:
+#    name: Go Hello World
+#    runs-on: ubuntu-latest
+#    container:
+#      image: golang:1.15
+#    steps:
+#      - name: Checkout the repository
+#        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
+#      - name: Cache Go packages
+#        uses: actions/cache@1a9e2138d905efd099035b49d8b7a3888c653ca8
+#        with:
+#          path: /go/pkg/mod
+#          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+#          restore-keys: ${{ runner.os }}-go-
+#      - name: Build
+#        run: |
+#          cd go/HelloWorld
+#          ./scripts/build.sh
+#  release-go-hello-world:
+#    name: Release Go Hello World
+#    needs: go-hello-world
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
+#      - name: Fetch all tags
+#        run: git fetch --prune --unshallow --tags
+#      - name: Publish Go HelloWorld
+#        run: |
+#          cd go/HelloWorld
+#          BASE_VERSION=$(cat .versionfile)
+#          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
+#          BRANCH=`echo ${GITHUB_REF#refs/heads/}`
+#          if [[ "${BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
+#            ./scripts/release_prod.sh
+#          else
+#            echo "Not a release branch.Skipping"
+#          fi
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#  go-second-hello-world:
+#    name: Go Second Hello World
+#    runs-on: ubuntu-latest
+#    container:
+#      image: golang:1.15
+#    steps:
+#      - name: Checkout the repository
+#        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
+#      - name: Cache Go packages
+#        uses: actions/cache@1a9e2138d905efd099035b49d8b7a3888c653ca8
+#        with:
+#          path: /go/pkg/mod
+#          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+#          restore-keys: ${{ runner.os }}-go-
+#      - name: Build
+#        run: |
+#          cd go/SecondHelloWorld
+#          ./scripts/build.sh
+#
+#  release-go-second-hello-world:
+#    name: Release Go Second Hello World
+#    needs: go-second-hello-world
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
+#      - name: Fetch all tags
+#        run: git fetch --prune --unshallow --tags
+#      - name: Publish Go SecondHelloWorld
+#        run: |
+#          cd go/SecondHelloWorld
+#          BASE_VERSION=$(cat .versionfile)
+#          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
+#          BRANCH=`echo ${GITHUB_REF#refs/heads/}`
+#          if [[ "${BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
+#            ./scripts/release_prod.sh
+#          else
+#            echo "Not a release branch.Skipping"
+#          fi
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
