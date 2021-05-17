@@ -146,8 +146,38 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: csharp helloworld
+          name: csharp-helloworld
           path: /__w/test-deploy/test-deploy/csharp/HelloWorld/bin/Release/netcoreapp2.1/HelloWorld.dll
+
+  release-csharp-hello-world:
+    name: Release C# HelloWorld
+    needs: csharp-hello-world
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
+      - name: Fetch all tags
+        run: git fetch --prune --unshallow --tags
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: csharp-helloworld
+          path: /__w/test-deploy/test-deploy/csharp/HelloWorld/bin/Release/netcoreapp2.1/HelloWorld.dll
+      - name: Publish C# HelloWorld
+        run: |
+          cd csharp/HelloWorld
+          BASE_VERSION=$(xmllint --xpath "//Project/PropertyGroup/Version/text()" Directory.Build.props)
+          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
+          BRANCH=`echo ${GITHUB_REF#refs/heads/}`
+          if [[ "${BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
+            ./scripts/release_prod.sh
+          else
+            echo "Not a release branch.Skipping.
+          fi
+        env:
+          NUGET_KEY: ${{ secrets.NUGET_KEY }}
+          NUGET_SOURCE: ${{ secrets.NUGET_SOURCE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   csharp-second-hello-world:
     name: C# Second Hello World
@@ -169,6 +199,41 @@ jobs:
           cd csharp/SecondHelloWorld
           ./scripts/clean.sh
           ./scripts/build.sh
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: csharp-helloworld
+          path: /__w/test-deploy/test-deploy/csharp/HelloWorld/bin/Release/netcoreapp2.1/SecondHelloWorld.dll
+
+  release-csharp-second-hello-world:
+    name: Release C# HelloWorld
+    needs: csharp-second-hello-world
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
+      - name: Fetch all tags
+        run: git fetch --prune --unshallow --tags
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: csharp-second-helloworld
+          path: /__w/test-deploy/test-deploy/csharp/HelloWorld/bin/Release/netcoreapp2.1/SecondHelloWorld.dll
+      - name: Publish C# Second HelloWorld
+        run: |
+          cd csharp/SecondHelloWorld
+          BASE_VERSION=$(xmllint --xpath "//Project/PropertyGroup/Version/text()" Directory.Build.props)
+          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
+          BRANCH=`echo ${GITHUB_REF#refs/heads/}`
+          if [[ "${BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
+            ./scripts/release_prod.sh
+          else
+            echo "Not a release branch.Skipping"
+          fi
+        env:
+          NUGET_KEY: ${{ secrets.NUGET_KEY }}
+          NUGET_SOURCE: ${{ secrets.NUGET_SOURCE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   #### Go
   go-hello-world:
     name: Go Hello World
