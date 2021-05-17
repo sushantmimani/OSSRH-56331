@@ -30,6 +30,42 @@ jobs:
           ./scripts/clean.sh
           ./scripts/build.sh
 
+  release-java-hello-world:
+    name: Release Java Hello World
+    needs: java-hello-world
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
+      - name: Fetch all tags
+        run: git fetch --prune --unshallow --tags
+      - name: Set up Maven Central Repository
+        uses: actions/setup-java@8764a52df183aa0ccea74521dfd9d506ffc7a19a
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          server-id: ossrh
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }} # Value of the GPG private key to import
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
+      - name: Publish Java HelloWorld
+        run: |
+          cd java/HelloWorld
+          BASE_VERSION=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version)
+          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
+          BRANCH=`echo ${GITHUB_REF#refs/heads/}`
+          if [[ "${BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
+            ./scripts/release_prod.sh
+          else
+            echo "Not on a release branch.Skipping"
+          fi
+        env:
+          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   java-second-hello-world:
     name: Java Second Hello World
     runs-on: ubuntu-latest
@@ -49,6 +85,42 @@ jobs:
           cd java/SecondHelloWorld
           ./scripts/clean.sh
           ./scripts/build.sh
+
+  release-second-java-hello-world:
+    name: Release Java Second Hello World
+    needs: java-second-hello-world
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
+      - name: Fetch all tags
+        run: git fetch --prune --unshallow --tags
+      - name: Set up Maven Central Repository
+        uses: actions/setup-java@8764a52df183aa0ccea74521dfd9d506ffc7a19a
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          server-id: ossrh
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }} # Value of the GPG private key to import
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
+      - name: Publish Java HelloWorld
+        run: |
+          cd java/SecondHelloWorld
+          BASE_VERSION=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version)
+          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
+          BRANCH=`echo ${GITHUB_REF#refs/heads/}`
+          if [[ "${BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
+            ./scripts/release_prod.sh
+          else
+            echo "Not on a release branch.Skipping"
+          fi
+        env:
+          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   #### C#
   csharp-hello-world:
