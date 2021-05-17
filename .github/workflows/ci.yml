@@ -202,7 +202,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: csharp-helloworld
+          name: csharp-second-helloworld
           path: /__w/test-deploy/test-deploy/csharp/HelloWorld/bin/Release/netcoreapp2.1/SecondHelloWorld.dll
 
   release-csharp-second-hello-world:
