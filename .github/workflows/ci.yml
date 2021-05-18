@@ -162,15 +162,12 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: csharp-helloworld
-          path: csharp/HelloWorld/bin/Release/netcoreapp2.1/HelloWorld.dll
       - name: Publish C# HelloWorld
         run: |
           sudo apt-get update -y
           sudo apt-get install -y libxml2-utils
-          pwd
-          printenv
           cd csharp/HelloWorld
-          ls
+          ls -R csharp/HelloWorld/bin
           BASE_VERSION=$(xmllint --xpath "//Project/PropertyGroup/Version/text()" Directory.Build.props)
           VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
           BRANCH=`echo ${GITHUB_REF#refs/heads/}`
