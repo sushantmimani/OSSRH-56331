@@ -143,9 +143,6 @@ jobs:
           cd csharp/HelloWorld
           ./scripts/clean.sh
           ./scripts/build.sh
-          which tar
-          tar --version
-          echo $PATH
       - name: Upload bin
         uses: actions/upload-artifact@v2
         with:
@@ -178,11 +175,6 @@ jobs:
           path: ${{ github.workspace }}/csharp/HelloWorld/obj
       - name: Publish C# HelloWorld
         run: |
-          export PATH=/bin:$PATH
-          ls /bin
-          which tar
-          tar --version
-          echo $PATH
           sudo apt-get install -y libxml2-utils
           cd csharp/HelloWorld
           BASE_VERSION=$(xmllint --xpath "//Project/PropertyGroup/Version/text()" Directory.Build.props)
