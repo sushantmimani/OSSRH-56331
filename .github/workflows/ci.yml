@@ -162,12 +162,14 @@ jobs:
         run: git fetch --prune --unshallow --tags
       - name: Download artifact
         uses: actions/download-artifact@v2
+        id: download
         with:
           name: csharp-helloworld
+          path: ${{ github.workspace }}/csharp/HelloWorld
       - name: Publish C# HelloWorld
         run: |
           sudo apt-get install -y libxml2-utils
-          ls -R csharp/HelloWorld
+          echo ${{steps.download.outputs.download-path}}
           cd csharp/HelloWorld
           BASE_VERSION=$(xmllint --xpath "//Project/PropertyGroup/Version/text()" Directory.Build.props)
           VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
