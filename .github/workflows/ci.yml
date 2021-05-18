@@ -143,16 +143,18 @@ jobs:
           cd csharp/HelloWorld
           ./scripts/clean.sh
           ./scripts/build.sh
-      - name: Upload bin
+      - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: csharp-helloworld-bin
-          path: ${{ github.workspace }}/csharp/HelloWorld/bin/**
-      - name: Upload obj
-        uses: actions/upload-artifact@v2
-        with:
-          name: csharp-helloworld-obj
-          path: ${{ github.workspace }}/csharp/HelloWorld/obj/**
+          name: csharp-helloworld
+          path: |
+            ${{ github.workspace }}/csharp/HelloWorld/bin/**
+            ${{ github.workspace }}/csharp/HelloWorld/obj/**
+#      - name: Upload obj
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: csharp-helloworld-obj
+#          path: ${{ github.workspace }}/csharp/HelloWorld/obj/**
 
   release-csharp-hello-world:
     name: Release C# HelloWorld
@@ -174,20 +176,22 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
           restore-keys: |
             ${{ runner.os }}-nuget
-      - name: Download bin
+      - name: Download artifact
         uses: actions/download-artifact@v2
         with:
           name: csharp-helloworld-bin
-          path: ${{ github.workspace }}/csharp/HelloWorld/bin
-      - name: Download obj
-        uses: actions/download-artifact@v2
-        with:
-          name: csharp-helloworld-obj
-          path: ${{ github.workspace }}/csharp/HelloWorld/obj
+#          path: /
+#      - name: Download obj
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: csharp-helloworld-obj
+#          path: ${{ github.workspace }}/csharp/HelloWorld/obj
       - name: Publish C# HelloWorld
         run: |
           sudo apt-get install -y libxml2-utils
+          ls -R .
           cd csharp/HelloWorld
+          ls -R .
           BASE_VERSION=$(xmllint --xpath "//Project/PropertyGroup/Version/text()" Directory.Build.props)
           VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
           BRANCH=`echo ${GITHUB_REF#refs/heads/}`
