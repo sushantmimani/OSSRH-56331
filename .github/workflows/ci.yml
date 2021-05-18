@@ -135,7 +135,7 @@ jobs:
         uses: actions/cache@1a9e2138d905efd099035b49d8b7a3888c653ca8
         with:
           path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
           restore-keys: |
             ${{ runner.os }}-nuget
       - name: Build
@@ -167,7 +167,7 @@ jobs:
         uses: actions/cache@1a9e2138d905efd099035b49d8b7a3888c653ca8
         with:
           path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
           restore-keys: |
             ${{ runner.os }}-nuget
       - name: Download bin
