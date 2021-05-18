@@ -143,13 +143,16 @@ jobs:
           cd csharp/HelloWorld
           ./scripts/clean.sh
           ./scripts/build.sh
-      - name: Upload artifact
+      - name: Upload bin
         uses: actions/upload-artifact@v2
         with:
-          name: csharp-helloworld
-          path: |
-            ${{ github.workspace }}/csharp/HelloWorld/obj
-            ${{ github.workspace }}/csharp/HelloWorld/bin
+          name: csharp-helloworld-bin
+          path: ${{ github.workspace }}/csharp/HelloWorld/bin/**
+      - name: Upload obj
+        uses: actions/upload-artifact@v2
+        with:
+          name: csharp-helloworld-obj
+          path: ${{ github.workspace }}/csharp/HelloWorld/obj/**
 
   release-csharp-hello-world:
     name: Release C# HelloWorld
@@ -160,15 +163,20 @@ jobs:
         uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
       - name: Fetch all tags
         run: git fetch --prune --unshallow --tags
-      - name: Download artifact
+      - name: Download bin
         uses: actions/download-artifact@v2
-        id: download
         with:
-          name: csharp-helloworld
-          path: ~/
+          name: csharp-helloworld-bin
+          path: ${{ github.workspace }}/csharp/HelloWorld/bin
+      - name: Download obj
+        uses: actions/download-artifact@v2
+        with:
+          name: csharp-helloworld-obj
+          path: ${{ github.workspace }}/csharp/HelloWorld/obj
       - name: Publish C# HelloWorld
         run: |
           sudo apt-get install -y libxml2-utils
+          pwd
           echo ${{steps.download.outputs.download-path}}
           cd csharp/HelloWorld
           BASE_VERSION=$(xmllint --xpath "//Project/PropertyGroup/Version/text()" Directory.Build.props)
