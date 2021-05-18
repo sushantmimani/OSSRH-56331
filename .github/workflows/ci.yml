@@ -148,8 +148,8 @@ jobs:
         with:
           name: csharp-helloworld
           path: |
-            ${{ github.workspace }}/csharp/HelloWorld/obj/**
-            ${{ github.workspace }}/csharp/HelloWorld/bin/**
+            ${{ github.workspace }}/csharp/HelloWorld/obj
+            ${{ github.workspace }}/csharp/HelloWorld/bin
 
   release-csharp-hello-world:
     name: Release C# HelloWorld
@@ -165,7 +165,7 @@ jobs:
         id: download
         with:
           name: csharp-helloworld
-          path: /
+          path: ~/
       - name: Publish C# HelloWorld
         run: |
           sudo apt-get install -y libxml2-utils
