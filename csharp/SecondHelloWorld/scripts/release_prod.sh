@@ -6,7 +6,7 @@ ARTIFACT_NAME=$(xmllint --xpath "//Project/PropertyGroup/Title/text()" SecondHel
 TAG=`echo csharp/${ARTIFACT_NAME}/v${BASE_VERSION}`
 RESULT=$(git tag -l ${TAG})
 if [[ "$RESULT" != ${TAG} ]]; then
-    dotnet pack -c Release
+    dotnet pack -c Release --no-build
     echo "Release prod artifact"
     find . -name *${BASE_VERSION}.nupkg  | xargs -L1 -I '{}' dotnet nuget push {} -k ${NUGET_KEY} -s ${NUGET_SOURCE}
 
