@@ -11,4 +11,6 @@ if [[ "$RESULT" != ${TAG}  ]]; then
     echo "Creating a new release tag"
     git tag -f ${TAG} ${CIRCLE_SHA1}
     git push origin --tags
+else
+    echo "Version is already deployed and tagged"
 fi
