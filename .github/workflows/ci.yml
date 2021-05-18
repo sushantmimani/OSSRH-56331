@@ -121,7 +121,6 @@ jobs:
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   #### C#
   csharp-hello-world:
     name: C# HelloWorld
@@ -165,13 +164,12 @@ jobs:
           path: ${{ github.workspace }}/csharp/HelloWorld/bin
       - name: Publish C# HelloWorld
         run: |
-          sudo apt-get update -y
-          sudo apt-get install -y libxml2-utils
           cd csharp/HelloWorld
           BASE_VERSION=$(xmllint --xpath "//Project/PropertyGroup/Version/text()" Directory.Build.props)
           VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
           BRANCH=`echo ${GITHUB_REF#refs/heads/}`
           if [[ "${BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
+            sudo apt-get install -y libxml2-utils
             ./scripts/release_prod.sh
           else
             echo "Not a release branch.Skipping."
@@ -223,12 +221,12 @@ jobs:
           path: ${{ github.workspace }}/csharp/SecondHelloWorld/bin
       - name: Publish C# Second HelloWorld
         run: |
-          sudo apt-get install -y libxml2-utils
           cd csharp/SecondHelloWorld
           BASE_VERSION=$(xmllint --xpath "//Project/PropertyGroup/Version/text()" Directory.Build.props)
           VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
           BRANCH=`echo ${GITHUB_REF#refs/heads/}`
           if [[ "${BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
+            sudo apt-get install -y libxml2-utils
             ./scripts/release_prod.sh
           else
             echo "Not a release branch.Skipping"
@@ -256,6 +254,7 @@ jobs:
         run: |
           cd go/HelloWorld
           ./scripts/build.sh
+
   release-go-hello-world:
     name: Release Go Hello World
     needs: go-hello-world
@@ -278,6 +277,7 @@ jobs:
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   go-second-hello-world:
     name: Go Second Hello World
     runs-on: ubuntu-latest
