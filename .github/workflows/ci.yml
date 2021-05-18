@@ -147,7 +147,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: csharp-helloworld
-          path: ${GITHUB_WORKSPACE}/csharp/HelloWorld/bin/Release/netcoreapp2.1/HelloWorld.dll
+          path: ${{ github.workspace }}/csharp/HelloWorld/bin/**
 
   release-csharp-hello-world:
     name: Release C# HelloWorld
