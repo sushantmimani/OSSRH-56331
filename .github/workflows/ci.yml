@@ -10,61 +10,26 @@ on:
 
 jobs:
   #### Java
-  java-hello-world:
-    name: Java Hello World
-    runs-on: ubuntu-latest
-    container:
-      image: ubuntu
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
-      - name: Install jq tool
-        run: |
-          apt-get update -y
-          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
-          apt-get install git gnupg maven -y
-      - name: Set up Maven Central Repository
-        uses: actions/setup-java@8764a52df183aa0ccea74521dfd9d506ffc7a19a
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-          server-id: ossrh
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_PASSWORD
-          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }} # Value of the GPG private key to import
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
-      - name: Cache Java packages
-        uses: actions/cache@1a9e2138d905efd099035b49d8b7a3888c653ca8
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build
-        run: |
-          cd java/HelloWorld
-          ./scripts/clean.sh
-          ./scripts/build.sh
-      - name: Publish Java HelloWorld
-        run: |
-          cd java/HelloWorld
-          BASE_VERSION=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version)
-          VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
-          BRANCH=`echo ${GITHUB_REF#refs/heads/}`
-          echo $BRANCH
-          echo $BASE_VERSION
-          echo $VERSION_SUFFIX
-          echo $GITHUB_REF
-          if [[ "${BRANCH}" =~ release-.* && "${VERSION_SUFFIX}" != "alpha" ]]; then
-            ./scripts/release_prod.sh
-          else
-            echo "Not on a release branch.Skipping"
-          fi
-        env:
-          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+#  java-hello-world:
+#    name: Java Hello World
+#    runs-on: ubuntu-latest
+#    container:
+#      image: adoptopenjdk/maven-openjdk11
+#    steps:
+#      - name: Checkout the repository
+#        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
+#      - name: Cache Java packages
+#        uses: actions/cache@1a9e2138d905efd099035b49d8b7a3888c653ca8
+#        with:
+#          path: ~/.m2
+#          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+#          restore-keys: ${{ runner.os }}-m2
+#      - name: Build
+#        run: |
+#          cd java/HelloWorld
+#          ./scripts/clean.sh
+#          ./scripts/build.sh
+#
 #  release-java-hello-world:
 #    name: Release Java Hello World
 #    needs: java-hello-world
@@ -169,8 +134,8 @@ jobs:
       - name: Cache dotnet packages
         uses: actions/cache@1a9e2138d905efd099035b49d8b7a3888c653ca8
         with:
-          path: ~/.nuget
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget
       - name: Build
@@ -178,6 +143,9 @@ jobs:
           cd csharp/HelloWorld
           ./scripts/clean.sh
           ./scripts/build.sh
+          which tar
+          tar --version
+          echo $PATH
       - name: Upload bin
         uses: actions/upload-artifact@v2
         with:
@@ -198,13 +166,6 @@ jobs:
         uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
       - name: Fetch all tags
         run: git fetch --prune --unshallow --tags
-      - name: Cache dotnet packages
-        uses: actions/cache@1a9e2138d905efd099035b49d8b7a3888c653ca8
-        with:
-          path: ~/.nuget
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget
       - name: Download bin
         uses: actions/download-artifact@v2
         with:
@@ -217,11 +178,11 @@ jobs:
           path: ${{ github.workspace }}/csharp/HelloWorld/obj
       - name: Publish C# HelloWorld
         run: |
+          which tar
+          tar --version
+          echo $PATH
           sudo apt-get install -y libxml2-utils
-          pwd
           cd csharp/HelloWorld
-          ls -R bin/
-          ls -R obj/
           BASE_VERSION=$(xmllint --xpath "//Project/PropertyGroup/Version/text()" Directory.Build.props)
           VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
           BRANCH=`echo ${GITHUB_REF#refs/heads/}`
