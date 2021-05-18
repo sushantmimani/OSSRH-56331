@@ -147,7 +147,9 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: csharp-helloworld
-          path: ${{ github.workspace }}/csharp/HelloWorld/bin/**
+          path: |
+#            ${{ github.workspace }}/csharp/HelloWorld/bin/**
+            ${{ github.workspace }}/csharp/HelloWorld/obj/**
 
   release-csharp-hello-world:
     name: Release C# HelloWorld
@@ -162,7 +164,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: csharp-helloworld
-          path: ${{ github.workspace }}/csharp/HelloWorld/bin
+          path: ${{ github.workspace }}/csharp/HelloWorld/obj
       - name: Publish C# HelloWorld
         run: |
           sudo apt-get install -y libxml2-utils
