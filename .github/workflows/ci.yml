@@ -168,11 +168,9 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y libxml2-utils
           pwd
-          ls
-          cd ~
-          pwd
-          ls
+          printenv
           cd csharp/HelloWorld
+          ls
           BASE_VERSION=$(xmllint --xpath "//Project/PropertyGroup/Version/text()" Directory.Build.props)
           VERSION_SUFFIX=`echo ${BASE_VERSION} | cut -f2 -d'-'`
           BRANCH=`echo ${GITHUB_REF#refs/heads/}`
