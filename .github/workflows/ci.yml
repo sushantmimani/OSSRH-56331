@@ -148,8 +148,8 @@ jobs:
         with:
           name: csharp-helloworld
           path: |
-            ${{ github.workspace }}/csharp/HelloWorld/bin/**
-            ${{ github.workspace }}/csharp/HelloWorld/obj/**
+            csharp/HelloWorld/bin/**
+            csharp/HelloWorld/obj/**
 #      - name: Upload obj
 #        uses: actions/upload-artifact@v2
 #        with:
@@ -179,7 +179,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
-          name: csharp-helloworld-bin
+          name: csharp-helloworld
 #          path: /
 #      - name: Download obj
 #        uses: actions/download-artifact@v2
