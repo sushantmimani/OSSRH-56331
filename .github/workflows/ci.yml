@@ -178,6 +178,8 @@ jobs:
           path: ${{ github.workspace }}/csharp/HelloWorld/obj
       - name: Publish C# HelloWorld
         run: |
+          export PATH=/bin:$PATH
+          ls /bin
           which tar
           tar --version
           echo $PATH
