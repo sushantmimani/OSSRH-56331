@@ -180,7 +180,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: csharp-helloworld
-#          path: /
+          path: ${{ github.workspace }}/csharp
 #      - name: Download obj
 #        uses: actions/download-artifact@v2
 #        with:
