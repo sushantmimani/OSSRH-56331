@@ -10,7 +10,7 @@
         <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
         <!-- Properties related to NuGet packaging: -->
         <PackageId>com.github.sushantmimani.helloworld</PackageId>
-        <Title>FirstHelloWorld</Title>
+        <Title>FirstHelloWorldCSharpTest</Title>
         <Description>Testing nuget deployments</Description>
         <Authors>Sushant Mimani</Authors>
         <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
