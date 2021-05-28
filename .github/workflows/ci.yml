@@ -32,6 +32,7 @@ jobs:
 
   release-java-hello-world:
     name: Release Java Hello World
+    if: startsWith( github.ref, 'release-' )
     needs: java-hello-world
     runs-on: ubuntu-latest
     steps:
@@ -88,6 +89,7 @@ jobs:
 
   release-second-java-hello-world:
     name: Release Java Second Hello World
+    if: startsWith( github.ref, 'release-' )
     needs: java-second-hello-world
     runs-on: ubuntu-latest
     steps:
@@ -152,6 +154,7 @@ jobs:
 
   release-csharp-hello-world:
     name: Release C# HelloWorld
+    if: startsWith( github.ref, 'release-' )
     needs: csharp-hello-world
     runs-on: ubuntu-latest
     steps:
@@ -222,6 +225,7 @@ jobs:
 
   release-csharp-second-hello-world:
     name: Release C# Second HelloWorld
+    if: startsWith( github.ref, 'release-' )
     needs: csharp-second-hello-world
     runs-on: ubuntu-latest
     steps:
@@ -283,6 +287,7 @@ jobs:
 
   release-go-hello-world:
     name: Release Go Hello World
+    if: startsWith( github.ref, 'release-' )
     needs: go-hello-world
     runs-on: ubuntu-latest
     steps:
@@ -325,6 +330,7 @@ jobs:
 
   release-go-second-hello-world:
     name: Release Go Second Hello World
+    if: startsWith( github.ref, 'release-' )
     needs: go-second-hello-world
     runs-on: ubuntu-latest
     steps:
