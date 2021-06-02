@@ -29,6 +29,7 @@ jobs:
           cd java/HelloWorld
           ./scripts/clean.sh
           ./scripts/build.sh
+          printenv
 
   release-java-hello-world:
     name: Release Java Hello World
