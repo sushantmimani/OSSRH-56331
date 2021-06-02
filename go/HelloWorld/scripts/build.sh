@@ -2,3 +2,4 @@
 set -e
 
 go build ./...
+printenv
