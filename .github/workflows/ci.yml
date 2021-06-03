@@ -32,7 +32,7 @@ jobs:
 
   release-java-hello-world:
     name: Release Java Hello World
-    if: startsWith( github.ref, 'refs/heads/release-' )
+    if: startsWith( github.ref, 'refs/heads/release-' ) && github.repository == 'sushantmimani/test-deploy'
     needs: java-hello-world
     runs-on: ubuntu-latest
     steps:
@@ -65,7 +65,7 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
 
   java-second-hello-world:
     name: Java Second Hello World
